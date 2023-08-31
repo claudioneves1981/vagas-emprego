@@ -16,13 +16,16 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Vagas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_VAGAS")
     private Long id;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="ID_USUARIO")
+    private Usuario usuario;
 
     @Column(name = "EMPRESA")
     private String empresa;

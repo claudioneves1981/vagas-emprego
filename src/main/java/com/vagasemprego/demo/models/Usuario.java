@@ -1,12 +1,14 @@
 package com.vagasemprego.demo.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -25,15 +27,9 @@ public class Usuario {
     @Column(name = "PASSWORD")
     private String password;
 
-    @ManyToOne(cascade={ CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
-    @JoinTable(
-            name = "TB_USUARIO_VAGAS",
-            joinColumns = @JoinColumn(name="ID_USUARIO",
-                    referencedColumnName = "ID_USUARIO"),
-            inverseJoinColumns = @JoinColumn(name = "ID_VAGAS",
-                    referencedColumnName ="ID_VAGAS")
-    )
-    private Vagas vagas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Vagas> vagas;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tab_user_roles", joinColumns = @JoinColumn(name= "user_id"))

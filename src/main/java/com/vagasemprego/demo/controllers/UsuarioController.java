@@ -17,7 +17,7 @@ public class UsuarioController {
     @GetMapping("/users")
     public List<Usuario> users(){
         return usuarioService.findAll();
-    }
+    } //TROCAR POR VAGAS
 
     @GetMapping("/users/{usuario}")
     public Usuario usuario(@PathVariable("usuario") String usuario){
