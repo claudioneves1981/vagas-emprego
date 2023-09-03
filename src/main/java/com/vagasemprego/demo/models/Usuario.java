@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,9 +29,13 @@ public class Usuario {
     @Column(name = "PASSWORD")
     private String password;
 
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Vagas> vagas;
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinTable(
+            name="TB_VAGAS_USUARIO",
+            joinColumns = @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO"),
+            inverseJoinColumns = @JoinColumn(name = "ID_VAGAS",referencedColumnName = "ID_VAGAS")
+    )
+    private List<Vagas> vagas;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tab_user_roles", joinColumns = @JoinColumn(name= "user_id"))

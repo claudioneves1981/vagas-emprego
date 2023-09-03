@@ -23,10 +23,6 @@ public class Vagas {
     @Column(name = "ID_VAGAS")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="ID_USUARIO")
-    private Usuario usuario;
-
     @Column(name = "EMPRESA")
     private String empresa;
 

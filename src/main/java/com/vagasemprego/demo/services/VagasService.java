@@ -18,25 +18,8 @@ public class VagasService {
     @Autowired
     private VagasRepository vagasRepository;
 
-    public List<Vagas> findAll(){
-        return vagasRepository.findAll();
-    }
-
-    public List<Vagas> findByContrato(String contrato) {
-            return vagasRepository.findByContrato(Contrato.valueOf(contrato.toUpperCase()));
-    }
-
-    public List<Vagas> findByTipo(String tipo) {
-        return vagasRepository.findByTipo(Tipo.valueOf(tipo.toUpperCase()));
-    }
-
-    public List<Vagas> findBySituacao(String situacao) {
-        return vagasRepository.findBySituacao(Situacao.valueOf(situacao.toUpperCase()));
-    }
-
-
-    public List<Vagas> findByInteresse(String interesse){
-        return vagasRepository.findByInteresse(Interesse.valueOf(interesse.toUpperCase()));
+    public void delete(Long id){
+        vagasRepository.deleteById(id);
     }
 
 }
