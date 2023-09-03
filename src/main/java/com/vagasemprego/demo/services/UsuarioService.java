@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,20 +38,80 @@ public class UsuarioService {
         return usuarioRepository.findByUsuario(usuario);
     }
 
-    public Usuario findBySituacao(String usuario, String situacao){
-        return usuarioRepository.findBySituacao(usuario, Situacao.valueOf(situacao.toUpperCase()));
+    public Usuario findBySituacao(String usuario, String situacao) {
+        Usuario user = usuarioRepository.findByUsuario(usuario);
+        Usuario replaceuser = new Usuario();
+        List<Vagas> vagas = user.getVagas();
+        List<Vagas> replacevagas = new ArrayList<>();
+        for (Vagas vaga : vagas) {
+            if (vaga.getSituacao().equals(Situacao.valueOf(situacao.toUpperCase()))) {
+                replacevagas.add(vaga);
+            }
+        }
+        replaceuser.setUsuario(user.getUsuario());
+        replaceuser.setRoles(user.getRoles());
+        replaceuser.setId(user.getId());
+        replaceuser.setPassword(user.getPassword());
+        replaceuser.setVagas(replacevagas);
+
+        return replaceuser;
     }
 
     public Usuario findByTipo(String usuario, String tipo){
-        return usuarioRepository.findByTipo(usuario, Tipo.valueOf(tipo.toUpperCase()));
+        Usuario user = usuarioRepository.findByUsuario(usuario);
+        Usuario replaceuser = new Usuario();
+        List<Vagas> vagas = user.getVagas();
+        List<Vagas> replacevagas = new ArrayList<>();
+        for (Vagas vaga : vagas) {
+            if (vaga.getTipo().equals(Tipo.valueOf(tipo.toUpperCase()))) {
+                replacevagas.add(vaga);
+            }
+        }
+        replaceuser.setUsuario(user.getUsuario());
+        replaceuser.setRoles(user.getRoles());
+        replaceuser.setId(user.getId());
+        replaceuser.setPassword(user.getPassword());
+        replaceuser.setVagas(replacevagas);
+
+        return replaceuser;
     }
 
     public Usuario findByContrato(String usuario, String contrato){
-        return usuarioRepository.findByContrato(usuario, Contrato.valueOf(contrato.toUpperCase()));
-    }
+        Usuario user = usuarioRepository.findByUsuario(usuario);
+        Usuario replaceuser = new Usuario();
+        List<Vagas> vagas = user.getVagas();
+        List<Vagas> replacevagas = new ArrayList<>();
+        for (Vagas vaga : vagas) {
+            if (vaga.getContrato().equals(Contrato.valueOf(contrato.toUpperCase()))) {
+                replacevagas.add(vaga);
+            }
+        }
+        replaceuser.setUsuario(user.getUsuario());
+        replaceuser.setRoles(user.getRoles());
+        replaceuser.setId(user.getId());
+        replaceuser.setPassword(user.getPassword());
+        replaceuser.setVagas(replacevagas);
+
+        return replaceuser;    }
 
     public Usuario findByInteresse(String usuario, String interesse){
-        return usuarioRepository.findByInteresse(usuario, Interesse.valueOf(interesse.toUpperCase()));
+        Usuario user = usuarioRepository.findByUsuario(usuario);
+        Usuario replaceuser = new Usuario();
+        List<Vagas> vagas = user.getVagas();
+        List<Vagas> replacevagas = new ArrayList<>();
+        for (Vagas vaga : vagas) {
+            if (vaga.getInteresse().equals(Interesse.valueOf(interesse.toUpperCase()))) {
+                replacevagas.add(vaga);
+            }
+        }
+        replaceuser.setUsuario(user.getUsuario());
+        replaceuser.setRoles(user.getRoles());
+        replaceuser.setId(user.getId());
+        replaceuser.setPassword(user.getPassword());
+        replaceuser.setVagas(replacevagas);
+
+        return replaceuser;
+
     }
 
     public List<Usuario> findAll() {
