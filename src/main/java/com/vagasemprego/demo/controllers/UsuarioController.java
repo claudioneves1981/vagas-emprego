@@ -54,9 +54,10 @@ public class UsuarioController {
         usuarioService.createUser(user);
     }
 
-    @DeleteMapping("/users/{usuario}/vagas/{id}")
-    public void deletaVaga(@PathVariable("usuario") String usuario, @PathVariable("id") Long id){
-
-        vagasService.delete(id);
+    @PutMapping("/users/{id}")
+    public void atualizar(@RequestBody Usuario user, @PathVariable("id") Long id){
+        if(user.getId() != null){
+            usuarioService.atualizar(user,id);
+        }
     }
 }

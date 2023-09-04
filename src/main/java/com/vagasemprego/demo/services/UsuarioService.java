@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
 
 @Service
 public class UsuarioService {
@@ -116,6 +116,13 @@ public class UsuarioService {
 
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
+    }
+
+    public void atualizar(Usuario usuario, Long id){
+        Optional<Usuario> optuser = usuarioRepository.findById(id);
+        if(optuser.isPresent()){
+            usuarioRepository.save(usuario);
+        }
     }
 
 }
