@@ -28,7 +28,6 @@ public class UsuarioService {
     public void createUser(Usuario user) {
         String pass = user.getPassword();
         List<Vagas> vagas = user.getVagas();
-        System.out.print(vagas);
         user.setVagas(vagas);
         user.setPassword(encoder.encode(pass));
         usuarioRepository.save(user);
