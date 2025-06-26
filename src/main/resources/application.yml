@@ -4,6 +4,7 @@ server.port: 8080
 security:
   config:
     prefix: Bearer
+    header: Authorization
     key: SECRET_KEY
     expiration: 3600000
 

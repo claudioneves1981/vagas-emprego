@@ -1,4 +1,9 @@
 package com.vagasemprego.demo.services;
+import com.vagasemprego.demo.dtos.UserRequestDTO;
+import com.vagasemprego.demo.dtos.UserResponseDTO;
+import com.vagasemprego.demo.exceptions.EntityUserAlreadyExistsException;
+import com.vagasemprego.demo.exceptions.EntityUserNotFoundException;
+import com.vagasemprego.demo.mappers.UserMapper;
 import com.vagasemprego.demo.models.Usuario;
 import com.vagasemprego.demo.models.Vagas;
 import com.vagasemprego.demo.models.enuns.Contrato;
@@ -9,10 +14,14 @@ import com.vagasemprego.demo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.vagasemprego.demo.utils.ValidationUtil.validateIdOrThrowException;
 
 
 @Service
@@ -22,10 +31,10 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
 
 
-    public void createUser(Usuario user) {
+   /* public void createUser(Usuario user) {
         String pass = user.getPassword();
         List<Vagas> vagas = user.getVagas();
         user.setVagas(vagas);
@@ -33,9 +42,9 @@ public class UsuarioService {
         usuarioRepository.save(user);
     }
 
-    public Usuario findByUsuario(String usuario) {
-        return usuarioRepository.findByUsuario(usuario);
-    }
+    //public Usuario findByUsuario(String usuario) {
+    //    return usuarioRepository.findByUsuario(usuario);
+    //}
 
     public Usuario findBySituacao(String usuario, String situacao) {
         Usuario user = usuarioRepository.findByUsuario(usuario);
@@ -111,17 +120,57 @@ public class UsuarioService {
 
         return replaceuser;
 
+    }*/
+
+
+
+    @Transactional(readOnly = true)
+    public List<UserResponseDTO> findAll() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Usuario> findAll() {
-        return usuarioRepository.findAll();
+    @Transactional(readOnly = true)
+    public UserResponseDTO findByUsuario(String usuario) {
+        return usuarioRepository.findByUsuario(usuario)
+                .map(UserMapper::toDto)
+                .orElseThrow(() -> new EntityUserNotFoundException(usuario));
     }
 
-    public void atualizar(Usuario usuario, Long id){
-        Optional<Usuario> optuser = usuarioRepository.findById(id);
-        if(optuser.isPresent()){
-            usuarioRepository.save(usuario);
+
+    @Transactional
+    public UserResponseDTO create(UserRequestDTO userRequestDTO) {
+        if (usuarioRepository.existsByUsuario(userRequestDTO.username())) {
+            throw new EntityUserAlreadyExistsException(userRequestDTO.username());
         }
+        Usuario user = UserMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.password()));
+        user = usuarioRepository.save(user);
+        return UserMapper.toDto(user);
     }
+
+    @Transactional
+    public UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
+        validateIdOrThrowException(id);
+        Usuario user = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityUserNotFoundException(id));
+
+        user.setUsuario(userRequestDTO.username());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.password()));
+
+        user = usuarioRepository.save(user);
+        return UserMapper.toDto(user);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        validateIdOrThrowException(id);
+        Usuario user = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityUserNotFoundException(id));
+        usuarioRepository.delete(user);
+    }
+
 
 }

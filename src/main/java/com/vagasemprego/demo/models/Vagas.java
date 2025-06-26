@@ -1,5 +1,6 @@
 package com.vagasemprego.demo.models;
 
+import com.vagasemprego.demo.dtos.UserResponseDTO;
 import com.vagasemprego.demo.models.enuns.Contrato;
 import com.vagasemprego.demo.models.enuns.Interesse;
 import com.vagasemprego.demo.models.enuns.Situacao;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -55,9 +58,26 @@ public class Vagas {
     private String beneficios;
 
     @Column(name="DATA_INSCRICAO")
-    private LocalDate inscricao;
+    private LocalDateTime inscricao;
 
     @Column(name="OBSERVACOES")
     private String observacoes;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Vagas that = (Vagas) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
 
 }

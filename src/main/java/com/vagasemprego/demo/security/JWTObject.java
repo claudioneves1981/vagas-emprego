@@ -8,8 +8,11 @@ import java.util.List;
 @Data
 public class JWTObject {
     private String subject;
-    private Date issuedAt;
-    private Date expiration;
+    private Long issuedAt;
+    private Long expiration;
+    private Long refreshExpiration;
+    //private String secret;
+    //private String refreshSecret;
     private List<String> roles;
 
 }

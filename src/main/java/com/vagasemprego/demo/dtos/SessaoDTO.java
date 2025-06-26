@@ -1,12 +1,16 @@
 package com.vagasemprego.demo.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
-@Data
-public class SessaoDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record SessaoDTO(
 
-        private String login;
-        private String token;
+        String refreshToken,
+        String token
+) {
+
+
 }

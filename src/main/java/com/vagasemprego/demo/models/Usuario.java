@@ -1,21 +1,14 @@
 package com.vagasemprego.demo.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import jakarta.persistence.*;
+import java.util.Objects;
 
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Usuario {
 
     @Id
@@ -29,17 +22,40 @@ public class Usuario {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinTable(
-            name="TB_VAGAS_USUARIO",
-            joinColumns = @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO"),
-            inverseJoinColumns = @JoinColumn(name = "ID_VAGAS",referencedColumnName = "ID_VAGAS")
-    )
-    private List<Vagas> vagas;
+    //@OneToMany(cascade=CascadeType.ALL)
+    //@JoinTable(
+   //         name="TB_VAGAS_USUARIO",
+   //         joinColumns = @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO"),
+   //         inverseJoinColumns = @JoinColumn(name = "ID_VAGAS",referencedColumnName = "ID_VAGAS")
+   // )
+    //private List<Vagas> vagas;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "tab_user_roles", joinColumns = @JoinColumn(name= "user_id"))
-    @Column(name = "role_id")
-    private List<String> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+
+    public Usuario(String usuario, String password) {
+        this.usuario = usuario;
+        this.password = password;
+        this.role = Role.USER;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario user = (Usuario) o;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    public enum Role {
+        ADMIN,
+        USER
+    }
 
 }
