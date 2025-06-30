@@ -5,20 +5,13 @@ import com.vagasemprego.demo.exceptions.EntityUserAlreadyExistsException;
 import com.vagasemprego.demo.exceptions.EntityUserNotFoundException;
 import com.vagasemprego.demo.mappers.UserMapper;
 import com.vagasemprego.demo.models.Usuario;
-import com.vagasemprego.demo.models.Vagas;
-import com.vagasemprego.demo.models.enuns.Contrato;
-import com.vagasemprego.demo.models.enuns.Interesse;
-import com.vagasemprego.demo.models.enuns.Situacao;
-import com.vagasemprego.demo.models.enuns.Tipo;
 import com.vagasemprego.demo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.vagasemprego.demo.utils.ValidationUtil.validateIdOrThrowException;

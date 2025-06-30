@@ -29,21 +29,21 @@ public class VagasController {
     @GetMapping("/me/situacao/{situacao}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<VagasResponseDTO>> situacao(@PathVariable("situacao")String situacao){
-        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findnByUsuarioIdAndSituacao(situacao);
+        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findByUsuarioIdAndSituacao(situacao);
         return ResponseEntity.ok(vagasResponseDTOList);
     }
 
     @GetMapping("/me/interesse/{interesse}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<VagasResponseDTO>> interesse(@PathVariable("interesse") String interesse){
-        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findnByUsuarioIdAndInteresse(interesse);
+        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findByUsuarioIdAndInteresse(interesse);
         return ResponseEntity.ok(vagasResponseDTOList);
     }
 
     @GetMapping("/me/contrato/{contrato}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<VagasResponseDTO>> contrato(@PathVariable("contrato")String contrato){
-        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findnByUsuarioIdAndContrato(contrato);
+        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findByUsuarioIdAndContrato(contrato);
         return ResponseEntity.ok(vagasResponseDTOList);
     }
 
@@ -51,7 +51,7 @@ public class VagasController {
     @GetMapping("/me/tipo/{tipo}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<VagasResponseDTO>> tipo(@PathVariable("tipo")String tipo){
-        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findnByUsuarioIdAndTipo(tipo);
+        List<VagasResponseDTO> vagasResponseDTOList = vagasService.findByUsuarioIdAndTipo(tipo);
         return ResponseEntity.ok(vagasResponseDTOList);
     }
 

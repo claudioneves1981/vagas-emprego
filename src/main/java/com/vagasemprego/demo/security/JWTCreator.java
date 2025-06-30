@@ -1,4 +1,5 @@
 package com.vagasemprego.demo.security;
+import com.vagasemprego.demo.dtos.SessaoDTO;
 import com.vagasemprego.demo.exceptions.InvalidJwtException;
 import com.vagasemprego.demo.models.Usuario;
 import com.vagasemprego.demo.repositories.UsuarioRepository;
@@ -21,18 +22,19 @@ public class JWTCreator {
 
     public static final String ROLES_AUTHORITIES = "role";
     private final Clock clock;
-    private final JWTObject jwtObject;
+    private JWTObject jwtObject;
     private Key secretKey;
     private Key refreshSecretKey;
     private final UsuarioRepository userRepository;
+    private final SessaoDTO sessaoDTO;
 
     @Autowired
-    public JWTCreator(JWTObject jwtObject, UsuarioRepository userRepository) {
-        this(jwtObject, userRepository, Clock.systemUTC());
+    public JWTCreator(SessaoDTO sessaoDTO, UsuarioRepository userRepository) {
+        this(sessaoDTO, userRepository, Clock.systemUTC());
     }
 
-    public JWTCreator(JWTObject jwtObject, UsuarioRepository userRepository, Clock clock) {
-        this.jwtObject = jwtObject;
+    public JWTCreator(SessaoDTO sessaoDTO, UsuarioRepository userRepository, Clock clock) {
+        this.sessaoDTO = sessaoDTO;
         this.userRepository = userRepository;
         this.clock = clock;
     }
@@ -40,10 +42,10 @@ public class JWTCreator {
     @PostConstruct
     protected void init() {
         try {
-            //byte[] decodedKeyBytes = Base64.getDecoder().decode(jwtObject.getSecret());
-            this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-           // byte[] decodedRefreshKeyBytes = Base64.getDecoder().decode(jwtObject.getRefreshSecret());
-            this.refreshSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+            byte[] decodedKeyBytes = Base64.getDecoder().decode(sessaoDTO.token());
+            this.secretKey = Keys.hmacShaKeyFor(decodedKeyBytes);
+            byte[] decodedRefreshKeyBytes = Base64.getDecoder().decode(sessaoDTO.refreshToken());
+            this.refreshSecretKey = Keys.hmacShaKeyFor(decodedRefreshKeyBytes);
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException("Failed to decode JWT secret", e);
         }
@@ -65,7 +67,7 @@ public class JWTCreator {
                         .orElse("USER"))
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(secretKey)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -80,7 +82,7 @@ public class JWTCreator {
                 .claim("type", "refresh")
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(refreshSecretKey)
+                .signWith(refreshSecretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -110,6 +112,7 @@ public class JWTCreator {
     }
 
     public void validateToken(String token) {
+
         try {
             Jwts.parser()
                     .setSigningKey(secretKey)

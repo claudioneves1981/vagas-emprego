@@ -49,7 +49,7 @@ public class VagasService {
     }
 
     @Transactional(readOnly = true)
-    public List<VagasResponseDTO> findnByUsuarioIdAndSituacao(String situacao) {
+    public List<VagasResponseDTO> findByUsuarioIdAndSituacao(String situacao) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
         return vagasRepository.findByUsuarioIdAndSituacao(userId, situacao)
                 .stream()
@@ -58,7 +58,7 @@ public class VagasService {
     }
 
     @Transactional(readOnly = true)
-    public List<VagasResponseDTO> findnByUsuarioIdAndInteresse(String interesse) {
+    public List<VagasResponseDTO> findByUsuarioIdAndInteresse(String interesse) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
         return vagasRepository.findByUsuarioIdAndInteresse(userId, interesse)
                 .stream()
@@ -67,7 +67,7 @@ public class VagasService {
     }
 
     @Transactional(readOnly = true)
-    public List<VagasResponseDTO> findnByUsuarioIdAndContrato(String contrato) {
+    public List<VagasResponseDTO> findByUsuarioIdAndContrato(String contrato) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
         return vagasRepository.findByUsuarioIdAndContrato(userId, contrato)
                 .stream()
@@ -76,7 +76,7 @@ public class VagasService {
     }
 
     @Transactional(readOnly = true)
-    public List<VagasResponseDTO> findnByUsuarioIdAndTipo(String tipo) {
+    public List<VagasResponseDTO> findByUsuarioIdAndTipo(String tipo) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
         return vagasRepository.findByUsuarioIdAndTipo(userId, tipo)
                 .stream()

@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
+
             String token = extractToken(request);
             jwtTokenProvider.validateToken(token);
 

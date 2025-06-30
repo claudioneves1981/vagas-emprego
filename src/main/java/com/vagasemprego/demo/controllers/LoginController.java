@@ -36,7 +36,7 @@ public class LoginController {
                 new UsernamePasswordAuthenticationToken(login.username(), login.password()));
         String token = jwtCreator.generateToken(authentication);
         String refreshToken = jwtCreator.generateRefreshToken(authentication);
-        return ResponseEntity.ok(new SessaoDTO(token, refreshToken));
+        return ResponseEntity.ok(new SessaoDTO(refreshToken, token));
     }
 
     @PostMapping("/register")
