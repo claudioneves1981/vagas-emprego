@@ -18,12 +18,6 @@ public class VagasController {
     @Autowired
     private VagasService vagasService;
 
-   /* @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<VagasResponseDTO>> findAll() {
-        List<VagasResponseDTO> vagas = vagasService.findAll();
-        return ResponseEntity.ok(vagas);
-    }*/
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
@@ -77,7 +71,7 @@ public class VagasController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         vagasService.delete(id);
         return ResponseEntity.noContent().build();

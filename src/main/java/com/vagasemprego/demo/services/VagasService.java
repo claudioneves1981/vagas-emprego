@@ -10,7 +10,6 @@ import com.vagasemprego.demo.repositories.VagasRepository;
 import com.vagasemprego.demo.security.JWTCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-//import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -52,7 +51,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findnByUsuarioIdAndSituacao(String situacao) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUserIdAndSituacao(userId, situacao)
+        return vagasRepository.findByUsuarioIdAndSituacao(userId, situacao)
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -61,7 +60,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findnByUsuarioIdAndInteresse(String interesse) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUserIdAndInteresse(userId, interesse)
+        return vagasRepository.findByUsuarioIdAndInteresse(userId, interesse)
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -70,7 +69,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findnByUsuarioIdAndContrato(String contrato) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUserIdAndContrato(userId, contrato)
+        return vagasRepository.findByUsuarioIdAndContrato(userId, contrato)
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -79,7 +78,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findnByUsuarioIdAndTipo(String tipo) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUserIdAndTipo(userId, tipo)
+        return vagasRepository.findByUsuarioIdAndTipo(userId, tipo)
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -91,7 +90,7 @@ public class VagasService {
         Usuario currentUser = jwtTokenProvider.getCurrentUser();
 
         Vagas vagasToSave = new Vagas();
-        vagasToSave.setUser(currentUser);
+        vagasToSave.setUsuario(currentUser);
         vagasToSave.setVaga(vagasDTO.vaga());
         vagasToSave.setContrato(vagasDTO.contrato());
         vagasToSave.setBeneficios(vagasDTO.beneficios());
@@ -116,7 +115,7 @@ public class VagasService {
         Vagas vagasToSave = vagasRepository.findById(id).orElseThrow(
                 () -> new EntityVagasNotFoundException(id));
 
-        authService.validateUserOwnership(vagasToSave.getUser());
+        authService.validateUserOwnership(vagasToSave.getUsuario());
 
 
         if (vagasDTO != null){
@@ -140,11 +139,11 @@ public class VagasService {
     public void delete(Long id) {
         validateIdOrThrowException(id);
 
-        Vagas reservationById =vagasRepository.findById(id).orElseThrow(
+        Vagas vagasById = vagasRepository.findById(id).orElseThrow(
                 () -> new EntityVagasNotFoundException(id));
 
-        authService.validateUserOwnership(reservationById.getUser());
-        vagasRepository.delete(reservationById);
+        authService.validateUserOwnership(vagasById.getUsuario());
+        vagasRepository.delete(vagasById);
     }
 
 

@@ -19,7 +19,7 @@ public class VagasMapper {
                 vagas.getEmpresa(),
                 vagas.getInscricao(),
                 vagas.getObservacoes(),
-                UserMapper.toDto(vagas.getUser())
+                UserMapper.toDto(vagas.getUsuario())
         );
     }
 }

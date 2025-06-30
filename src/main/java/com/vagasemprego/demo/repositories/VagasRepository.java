@@ -12,9 +12,9 @@ public interface VagasRepository extends JpaRepository<Vagas, Long> {
 
     Collection<Vagas> findByUsuario(Usuario usuario);
 
-    List<Vagas> findByUserIdAndSituacao(Long id, String situacao);
-    List<Vagas> findByUserIdAndInteresse(Long id, String interesse);
-    List<Vagas> findByUserIdAndContrato(Long id, String contrato);
-    List<Vagas> findByUserIdAndTipo(Long id, String  tipo);
+    List<Vagas> findByUsuarioIdAndSituacao(Long userId, String situacao);
+    List<Vagas> findByUsuarioIdAndInteresse(Long userId, String interesse);
+    List<Vagas> findByUsuarioIdAndContrato(Long userId, String contrato);
+    List<Vagas> findByUsuarioIdAndTipo(Long userId, String tipo);
 
 }

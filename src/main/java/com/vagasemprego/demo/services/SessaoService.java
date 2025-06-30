@@ -1,22 +1,14 @@
 package com.vagasemprego.demo.services;
 
-import com.vagasemprego.demo.dtos.LoginDTO;
-import com.vagasemprego.demo.dtos.SessaoDTO;
 import com.vagasemprego.demo.exceptions.ForbiddenException;
 import com.vagasemprego.demo.exceptions.InvalidJwtException;
 import com.vagasemprego.demo.models.Usuario;
-import com.vagasemprego.demo.repositories.UsuarioRepository;
 import com.vagasemprego.demo.security.JWTCreator;
-import com.vagasemprego.demo.security.JWTObject;
-import com.vagasemprego.demo.security.SecurityConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service

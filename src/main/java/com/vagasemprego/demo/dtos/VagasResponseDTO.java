@@ -6,10 +6,6 @@ import com.vagasemprego.demo.models.enuns.Interesse;
 import com.vagasemprego.demo.models.enuns.Situacao;
 import com.vagasemprego.demo.models.enuns.Tipo;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record VagasResponseDTO(
@@ -27,8 +23,8 @@ public record VagasResponseDTO(
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime inscricao,
-        String observacoes,
 
+        String observacoes,
         UserResponseDTO user
 
 ) {

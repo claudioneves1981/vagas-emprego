@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
 import java.security.Key;
 import java.time.Clock;
 import java.util.*;
 
+@Component
 public class JWTCreator {
 
     public static final String ROLES_AUTHORITIES = "role";
@@ -109,7 +111,7 @@ public class JWTCreator {
 
     public void validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            Jwts.parser()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
@@ -119,7 +121,7 @@ public class JWTCreator {
     }
 
     public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder()
+        return Jwts.parser()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
