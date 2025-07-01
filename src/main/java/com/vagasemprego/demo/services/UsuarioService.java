@@ -132,6 +132,13 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntityUserNotFoundException(usuario));
     }
 
+    @Transactional(readOnly = true)
+    public UserResponseDTO findById(Long id) {
+        return usuarioRepository.findById(id)
+                .map(UserMapper::toDto)
+                .orElseThrow(() -> new EntityUserNotFoundException(id));
+    }
+
 
     @Transactional
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {

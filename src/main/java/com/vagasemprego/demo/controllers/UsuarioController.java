@@ -2,6 +2,9 @@ package com.vagasemprego.demo.controllers;
 
 import com.vagasemprego.demo.dtos.UserRequestDTO;
 import com.vagasemprego.demo.dtos.UserResponseDTO;
+import com.vagasemprego.demo.mappers.UserMapper;
+import com.vagasemprego.demo.models.Usuario;
+import com.vagasemprego.demo.security.JWTCreator;
 import com.vagasemprego.demo.services.UsuarioService;
 import com.vagasemprego.demo.services.VagasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,29 +24,35 @@ public class UsuarioController {
     @Autowired
     private VagasService vagasService;
 
+    @Autowired
+    private JWTCreator jwtCreator;
+
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         List<UserResponseDTO> userResponseDTOList = usuarioService.findAll();
         return ResponseEntity.ok(userResponseDTOList);
     }
 
-    @GetMapping("/{usuario}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponseDTO> findByUsuario(@PathVariable String usuario) {
-        UserResponseDTO userResponseDTO = usuarioService.findByUsuario(usuario);
-        return ResponseEntity.ok(userResponseDTO);
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserResponseDTO> findByUsuario() {
+        Usuario usuario = jwtCreator.getCurrentUser();
+        return ResponseEntity.ok(UserMapper.toDto(usuario));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> findByIdUsuario(@PathVariable Long id) {
+        UserResponseDTO usuario = usuarioService.findById(id);
+        return ResponseEntity.ok(usuario);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO userDTO) {
         UserResponseDTO userResponseDTO = usuarioService.update(id, userDTO);
         return ResponseEntity.ok(userResponseDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
