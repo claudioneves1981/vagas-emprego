@@ -17,6 +17,8 @@ public class JWTObject {
     private Long refreshExpiration;
     private String secret;
     private String refreshSecret;
+    private String prefix;
+    private String header;
     private List<String> roles;
 
 }

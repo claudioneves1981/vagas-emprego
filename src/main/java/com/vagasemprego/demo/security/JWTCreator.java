@@ -14,6 +14,8 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Clock;
 import java.util.*;
 
@@ -22,19 +24,19 @@ public class JWTCreator {
 
     public static final String ROLES_AUTHORITIES = "role";
     private final Clock clock;
-    private JWTObject jwtObject;
+    private final JWTObject jwtObject;
     private Key secretKey;
     private Key refreshSecretKey;
     private final UsuarioRepository userRepository;
-    private final SessaoDTO sessaoDTO;
+    //private final SessaoDTO sessaoDTO;
 
     @Autowired
-    public JWTCreator(SessaoDTO sessaoDTO, UsuarioRepository userRepository) {
-        this(sessaoDTO, userRepository, Clock.systemUTC());
+    public JWTCreator(JWTObject jwtObject, UsuarioRepository userRepository) {
+        this(jwtObject, userRepository, Clock.systemUTC());
     }
 
-    public JWTCreator(SessaoDTO sessaoDTO, UsuarioRepository userRepository, Clock clock) {
-        this.sessaoDTO = sessaoDTO;
+    public JWTCreator(JWTObject jwtObject, UsuarioRepository userRepository, Clock clock) {
+        this.jwtObject= jwtObject;
         this.userRepository = userRepository;
         this.clock = clock;
     }
@@ -42,14 +44,20 @@ public class JWTCreator {
     @PostConstruct
     protected void init() {
         try {
-            byte[] decodedKeyBytes = Base64.getDecoder().decode(sessaoDTO.token());
+            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+            byte[] decodedKeyBytes = new byte[32];
+            secureRandom.nextBytes(decodedKeyBytes);
             this.secretKey = Keys.hmacShaKeyFor(decodedKeyBytes);
-            byte[] decodedRefreshKeyBytes = Base64.getDecoder().decode(sessaoDTO.refreshToken());
+            byte[] decodedRefreshKeyBytes = new byte[32];
+            secureRandom.nextBytes(decodedRefreshKeyBytes);
             this.refreshSecretKey = Keys.hmacShaKeyFor(decodedRefreshKeyBytes);
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException("Failed to decode JWT secret", e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
     public String generateToken(Authentication authentication) {
 
