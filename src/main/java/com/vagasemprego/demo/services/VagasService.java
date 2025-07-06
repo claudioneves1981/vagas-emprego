@@ -6,6 +6,10 @@ import com.vagasemprego.demo.exceptions.EntityVagasNotFoundException;
 import com.vagasemprego.demo.mappers.VagasMapper;
 import com.vagasemprego.demo.models.Usuario;
 import com.vagasemprego.demo.models.Vagas;
+import com.vagasemprego.demo.models.enuns.Contrato;
+import com.vagasemprego.demo.models.enuns.Interesse;
+import com.vagasemprego.demo.models.enuns.Situacao;
+import com.vagasemprego.demo.models.enuns.Tipo;
 import com.vagasemprego.demo.repositories.VagasRepository;
 import com.vagasemprego.demo.security.JWTCreator;
 import org.springframework.stereotype.Service;
@@ -51,7 +55,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findByUsuarioIdAndSituacao(String situacao) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUsuarioIdAndSituacao(userId, situacao)
+        return vagasRepository.findByUsuarioIdAndSituacao(userId,Situacao.valueOf(situacao.toUpperCase()))
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -60,7 +64,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findByUsuarioIdAndInteresse(String interesse) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUsuarioIdAndInteresse(userId, interesse)
+        return vagasRepository.findByUsuarioIdAndInteresse(userId, Interesse.valueOf(interesse.toUpperCase()))
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -69,7 +73,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findByUsuarioIdAndContrato(String contrato) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUsuarioIdAndContrato(userId, contrato)
+        return vagasRepository.findByUsuarioIdAndContrato(userId, Contrato.valueOf(contrato.toUpperCase()))
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -78,7 +82,7 @@ public class VagasService {
     @Transactional(readOnly = true)
     public List<VagasResponseDTO> findByUsuarioIdAndTipo(String tipo) {
         Long userId = jwtTokenProvider.getCurrentUser().getId();
-        return vagasRepository.findByUsuarioIdAndTipo(userId, tipo)
+        return vagasRepository.findByUsuarioIdAndTipo(userId, Tipo.valueOf(tipo.toUpperCase()))
                 .stream()
                 .map(VagasMapper::toDto)
                 .collect(Collectors.toList());
@@ -95,7 +99,7 @@ public class VagasService {
         vagasToSave.setContrato(vagasDTO.contrato());
         vagasToSave.setBeneficios(vagasDTO.beneficios());
         vagasToSave.setEmpresa(vagasDTO.empresa());
-        vagasToSave.setInscricao(LocalDateTime.from(Instant.now()));
+        vagasToSave.setInscricao(LocalDateTime.now());
         vagasToSave.setInteresse(vagasDTO.interesse());
         vagasToSave.setTipo(vagasDTO.tipo());
         vagasToSave.setSalario(vagasDTO.salario());

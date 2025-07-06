@@ -8,6 +8,15 @@ de acordo com caracteristicas como
 - Interesse
 - Situacao 
 
+Tecnologias Usadas
+
+- Spring 3.3.1
+- Gradle
+- Java 17
+- Postman
+
+
+
 Para testar a api faça do Download do repositorio fonte, ou clone usando git
 
 ```
@@ -31,18 +40,119 @@ para cadastrar um usuario
 acesse 
 
 ```
-http://localhost:8080/users
+POST /api/v1/auth/register
 ```
-![img.png](img.png)
 
-nas opcoes de situação tipo, contrato e interesse é utilizado 
-enumeração
+para logar
 
-para o caso vc deseja cadastrar uma opção especifica vc usara um numero correspondente.
+```
+POST /api/v1/auth/login
+```
+
+para ambos vc pode usar o payload abaixo
+
+```
+{
+    "username" : "usuario",
+    "password" : "senha"
+}
+```
+
+o mesmo irá retornar um jwt token que vai inserir no header de Authorization
+
+```
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjZm5lZ3VhY3UiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1MTgzMTU4NiwiZXhwIjoxNzUxOTE3OTg2fQ.IdEEzZcb92ryScOkWXiOzYtJaSVSsYjyyVUUVKAiFkU",
+    "token" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjZm5lZ3VhY3UiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1MTgzMTU4NiwiZXhwIjoxNzUxOTE3OTg2fQ.IdEEzZcb92ryScOkWXiOzYtJaSVSsYjyyVUUVKAiFkU"
+}
+
+```
+
+### Usos ###
+
+vc pode fazer a consulta do usuario logado pelo endpoint
+
+```
+
+GET api/v1/auth/me
+
+```
+
+consulta usuarios cadastrados
+
+```
+
+GET api/v1/users
+
+```
+
+para atualizar um usuario
+
+```
+
+PUT /api/v1/users/1
+
+```
+
+Request Body 
+
+```
+"username" : "username"
+"password" : "password"
+
+```
+
+Response Body 200
+
+```
+{
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+}
+```
+
+Deletar um usuario
+
+``` 
+
+DELETE api/v1/users/1
+
+```
+
+
+
+Para cadastrar uma vaga
+
+```
+
+POST api/v1/vagas
+
+```
+
+Request Body
+
+```
+
+{
+      "empresa" : "Atento",
+      "vaga" : "Auxiliar",
+      "situacao" : "OFERTA",
+      "origem" : "Redes Sociais",
+      "interesse" : "BAIXISSIMO",
+      "salario" : 2000.00,
+      "contrato" : "PJ",
+      "tipo" : "PRESENCIAL",
+      "beneficios" : "Carro da Empresa",
+      "observacoes" : "Vaga fica longe"
+}
+
+```
+
+nas opcoes de situação, tipo, contrato e interesse você pode seguir a tabela abaixo.
 
 <table>
 <thead>
-    <th>Opcao</th>
     <th>Tipo</th>
     <th>Contrato</th>
     <th>Situacao</th>
@@ -50,49 +160,42 @@ para o caso vc deseja cadastrar uma opção especifica vc usara um numero correspo
 </thead>
 <tbody>
 <tr>
-    <td>0</td>
     <td>REMOTO</td>
     <td>PJ</td>
     <td>OFERTA</td>
     <td>BAIXISSIMO</td>
 </tr>
 <tr>
-    <td>1</td>
     <td>HIBRIDO</td>
     <td>CLT</td>
     <td>DESISTI</td>
     <td>BAIXO</td>
 </tr>
 <tr>
-    <td>2</td>
     <td>PRESENCIAL</td>
     <td>FREELANCE</td>
     <td>AGUARDANDO</td>
     <td>MEDIO</td>
 </tr>
 <tr>
-    <td>3</td>
     <td></td>
     <td>TEMPORARIO</td>
     <td>CONGELADA</td>
     <td>ALTO</td>
 </tr>
 <tr>
-    <td>4</td>
     <td></td>
     <td>ESTÁGIO</td>
     <td>ANDAMENTO</td>
     <td>ALTISSIMO</td>
 </tr>
 <tr>
-    <td>5</td>
     <td></td>
     <td>TRAINEE</td>
     <td>ELIMINADO</td>
     <td></td>
 </tr>
 <tr>
-    <td>6</td>
     <td></td>
     <td>OUTROS</td>
     <td>INSCRITO</td>
@@ -101,69 +204,414 @@ para o caso vc deseja cadastrar uma opção especifica vc usara um numero correspo
 </tbody>
 </table>
 
-para o login você usará o seguinte end point
+
+
+você pode fazer a consulta das vagas por usuario você pode usar o endpoint
 
 ```
-http://localhost:8080/login
-```
-
-
-![img_2.png](img_2.png)
-
-o mesmo irá retornar um jwt token que você usará para fazer o acesso e as consultas
-
-### Consultas ###
-
-vc pode fazer a consulta das vagas por usuario usando o endpoint
+GET /api/v1/vagas/me
 
 ```
-http://localhost:8080/users/{usuario}/vagas/
+
+o retorno será algo parecido com isso
+
 ```
-![img_3.png](img_3.png)
+[
+    {
+        "id": 1,
+        "empresa": "tESTE",
+        "vaga": "oPERARIO",
+        "situacao": "OFERTA",
+        "origem": "EMAIL",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "CLT",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:54:25",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 2,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "OFERTA",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "HIBRIDO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:55:59",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 3,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "ALTO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "PRESENCIAL",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+]
+```
 
-So lembrando que deve se colocar o token JWT em Authorization
-
-#### Outras consultas ####
 
 As outras consultas seguem a seguinte logica
 
 - por Tipo
     ```
-  http://localhost:8080/users/{usuario}/vagas/tipo/{opcões}
+  GET /api/v1/vagas/me/tipo/{tipo}
   ```
-  Opções {remoto, hibrido,presencial}
+  Opções {remoto, hibrido, presencial}
 
+Ex. /api/v1/vagas/me/tipo/REMOTO
 
+```
+[
+    {
+        "id": 1,
+        "empresa": "tESTE",
+        "vaga": "oPERARIO",
+        "situacao": "OFERTA",
+        "origem": "EMAIL",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "CLT",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:54:25",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 2,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "OFERTA",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:55:59",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 3,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "ALTO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+]
+```
 
 - por Interesse
     ```
-  http://localhost:8080/users/{usuario}/vagas/interesse/{opcoes}
+  GET /api/v1/vagas/me/interesse/{interesse}
   ```
   Opções {baixissimo, baixo, medio, alto, altissimo}
 
+Ex. /api/v1/vagas/me/interesse/BAIXISSIMO
 
-- por Situacao
-  ```
-  http://localhost:8080/users/{usuario}/vagas/situacao/{opcões}
-  ```
-  Opções {oferta,desisti,aguardando,congelada,andamento,eliminado,inscrito}
+```
+[
+    {
+        "id": 1,
+        "empresa": "tESTE",
+        "vaga": "oPERARIO",
+        "situacao": "OFERTA",
+        "origem": "EMAIL",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "CLT",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:54:25",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 2,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "OFERTA",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:55:59",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 3,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+]
+```
 
+- por Situação
+    ```
+  GET /api/v1/vagas/me/situacao/{situacao}
+  ```
+  Opções {oferta,desisti,aguardando,congelada,andamento,eliminado}
+
+Ex. /api/v1/vagas/me/situacao/DESISTI
+
+```
+[
+    {
+        "id": 1,
+        "empresa": "tESTE",
+        "vaga": "oPERARIO",
+        "situacao": "DESISTI",
+        "origem": "EMAIL",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "CLT",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:54:25",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 2,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:55:59",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 3,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+]
+```
 
 - por Contrato
     ```
-  http://localhost:8080/users/{usuario}/vagas/contrato/{opcões}
+  GET /api/v1/vagas/me/contrato/{contrato}
   ```
   Opções {pj, clt, freelance, temporario, estagio, trainee, outros}
 
-
-### Outras Opções ###
-
-Atualizando Cadastro
-
-é feito por esse endpoint
+Ex. /api/v1/vagas/me/contrato/FREELANCE
 
 ```
-http://localhost:8080/users/{id}
+[
+    {
+        "id": 1,
+        "empresa": "tESTE",
+        "vaga": "oPERARIO",
+        "situacao": "DESISTI",
+        "origem": "EMAIL",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "FREELANCE",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:54:25",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 2,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "FREELANCE",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:55:59",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    },
+    {
+        "id": 3,
+        "empresa": "ATENTO",
+        "vaga": "ATENDENTE",
+        "situacao": "DESISTI",
+        "origem": "REDES SOCIAIS",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "FREELANCE",
+        "tipo": "REMOTO",
+        "beneficios": "vr",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica em outro estado",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+]
 ```
-![img_4.png](img_4.png)
+
+Atualizando uma Vaga.
+
+```
+
+PUT api/v1/vagas/1
+
+```
+
+Request Body
+
+```
+{
+"empresa" : "Atento",
+"vaga" : "Auxiliar",
+"situacao" : "OFERTA",
+"origem" : "Redes Sociais",
+"interesse" : "BAIXISSIMO",
+"salario" : 2000.00,
+"contrato" : "PJ",
+"tipo" : "PRESENCIAL",
+"beneficios" : "Carro da Empresa",
+"observacoes" : "Vaga fica longe"
+}
+
+```
+
+Response Body 200
+
+```
+{
+        "id": 3,
+        "empresa": Atento",
+        "vaga": "Auxiliar",
+        "situacao": "OFERTA",
+        "origem": "Redes Sociais",
+        "interesse": "BAIXISSIMO",
+        "salario": 2000.0,
+        "contrato": "PJ",
+        "tipo": "PRESENCIAL",
+        "beneficios": "Carro da Empresa",
+        "inscricao": "2025-07-06T16:56:51",
+        "observacoes": "Vaga fica longe",
+        "user": {
+            "id": 1,
+            "name": "cfneguacu",
+            "role": "USER"
+        }
+    }
+```
   
+Deletando uma vaga
+
+```
+DELETE api/v1/vagas/1
+```

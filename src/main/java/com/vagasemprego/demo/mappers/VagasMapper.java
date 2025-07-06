@@ -8,15 +8,15 @@ public class VagasMapper {
     public static VagasResponseDTO toDto(Vagas vagas) {
         return new VagasResponseDTO(
                 vagas.getId(),
+                vagas.getEmpresa(),
                 vagas.getVaga(),
-                vagas.getBeneficios(),
                 vagas.getSituacao(),
                 vagas.getOrigem(),
                 vagas.getInteresse(),
                 vagas.getSalario(),
                 vagas.getContrato(),
                 vagas.getTipo(),
-                vagas.getEmpresa(),
+                vagas.getBeneficios(),
                 vagas.getInscricao(),
                 vagas.getObservacoes(),
                 UserMapper.toDto(vagas.getUsuario())

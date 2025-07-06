@@ -5,8 +5,6 @@ import com.vagasemprego.demo.models.enuns.Interesse;
 import com.vagasemprego.demo.models.enuns.Situacao;
 import com.vagasemprego.demo.models.enuns.Tipo;
 
-import java.time.LocalDateTime;
-
 public record VagasRequestDTO(
 
         String empresa,
@@ -18,7 +16,6 @@ public record VagasRequestDTO(
         Contrato contrato,
         Tipo tipo,
         String beneficios,
-        LocalDateTime inscricao,
         String observacoes
 
 ) {

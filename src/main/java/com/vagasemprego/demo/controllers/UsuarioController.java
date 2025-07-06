@@ -33,13 +33,6 @@ public class UsuarioController {
         return ResponseEntity.ok(userResponseDTOList);
     }
 
-    @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<UserResponseDTO> findByUsuario() {
-        Usuario usuario = jwtCreator.getCurrentUser();
-        return ResponseEntity.ok(UserMapper.toDto(usuario));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> findByIdUsuario(@PathVariable Long id) {
         UserResponseDTO usuario = usuarioService.findById(id);
