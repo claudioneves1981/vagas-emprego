@@ -14,6 +14,7 @@ Tecnologias Usadas
 - Gradle
 - Java 17
 - Postman
+- JWT Token
 
 
 
