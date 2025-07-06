@@ -1,11 +1,11 @@
 #tomcat
 server.port: 8080
 
-security:
-  config:
-    prefix: Bearer
-    key: SECRET_KEY
-    expiration: 3600000
+jwt:
+  prefix: Bearer
+  header: Authorization
+  expiration: 86400000
+  refreshExpiration: 604800000
 
 spring:
   h2:

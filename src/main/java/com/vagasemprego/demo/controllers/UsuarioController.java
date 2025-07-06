@@ -1,23 +1,21 @@
 package com.vagasemprego.demo.controllers;
 
-import com.vagasemprego.demo.dtos.SessaoDTO;
+import com.vagasemprego.demo.dtos.UserRequestDTO;
+import com.vagasemprego.demo.dtos.UserResponseDTO;
+import com.vagasemprego.demo.mappers.UserMapper;
 import com.vagasemprego.demo.models.Usuario;
-import com.vagasemprego.demo.models.Vagas;
-import com.vagasemprego.demo.services.SessaoService;
+import com.vagasemprego.demo.security.JWTCreator;
 import com.vagasemprego.demo.services.UsuarioService;
 import com.vagasemprego.demo.services.VagasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 @RestController
+@RequestMapping("/api/v1/users")
 public class UsuarioController {
 
     @Autowired
@@ -27,86 +25,30 @@ public class UsuarioController {
     private VagasService vagasService;
 
     @Autowired
-    private SessaoService sessaoService;
+    private JWTCreator jwtCreator;
 
-    @GetMapping("/users")
-    public List<Usuario> users(){
-        return usuarioService.findAll();
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> findAll() {
+        List<UserResponseDTO> userResponseDTOList = usuarioService.findAll();
+        return ResponseEntity.ok(userResponseDTOList);
     }
 
-    @GetMapping("users/{usuario}/vagas/situacao/{situacao}")
-    public ResponseEntity<Usuario> situacao(@PathVariable("usuario") String usuario, @PathVariable("situacao")String situacao){
-
-        Usuario usuarioTemp = usuarioService.findBySituacao(usuario,situacao);
-
-        if (usuarioTemp == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .body(usuarioTemp);
-
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> findByIdUsuario(@PathVariable Long id) {
+        UserResponseDTO usuario = usuarioService.findById(id);
+        return ResponseEntity.ok(usuario);
     }
 
-    @GetMapping("/users/{usuario}/vagas/tipo/{tipo}")
-    public ResponseEntity<Usuario> tipo(@PathVariable("usuario") String usuario, @PathVariable("tipo")String tipo){
-        Usuario usuarioTemp = usuarioService.findByTipo(usuario,tipo);
-
-
-        if (usuarioTemp == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .body(usuarioTemp);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO userDTO) {
+        UserResponseDTO userResponseDTO = usuarioService.update(id, userDTO);
+        return ResponseEntity.ok(userResponseDTO);
     }
 
-    @GetMapping("/users/{usuario}/vagas/contrato/{contrato}")
-    public ResponseEntity<Usuario> contrato(@PathVariable("usuario") String usuario, @PathVariable("contrato")String contrato){
-        Usuario usuarioTemp = usuarioService.findByContrato(usuario,contrato);
-
-
-        if (usuarioTemp == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .body(usuarioTemp);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        usuarioService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-
-    @GetMapping("/users/{usuario}/vagas/interesse/{interesse}")
-    public ResponseEntity<Usuario> interesse(@PathVariable("usuario") String usuario, @PathVariable("interesse")String interesse){
-        Usuario usuarioTemp = usuarioService.findByInteresse(usuario,interesse);
-
-
-        if (usuarioTemp == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .body(usuarioTemp);
-    }
-
-
-    @GetMapping("/users/{usuario}/vagas")
-    public Usuario usuario(@PathVariable("usuario") String usuario){
-        return usuarioService.findByUsuario(usuario);
-    }
-
-    @PostMapping("/users")
-    public void postUser(@RequestBody Usuario user){
-        usuarioService.createUser(user);
-    }
-
-    @PutMapping("/users/{id}")
-    public void atualizar(@RequestBody Usuario user, @PathVariable("id") Long id){
-        if(user.getId() != null){
-            usuarioService.atualizar(user,id);
-        }
-    }
 }
